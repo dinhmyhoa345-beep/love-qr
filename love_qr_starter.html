@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Love QR — Món quà nhỏ, yêu thương lớn</title>
+<meta name="description" content="Tạo trang tình yêu và mã QR cá nhân hóa với Love QR.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--pink:#ec6e9a;--deep:#a83263;--soft:#fff0f5;--ink:#54263a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(145deg,#fff7fa,#ffe5ef);color:var(--ink)}
+header{padding:24px 18px;text-align:center}.brand{font-weight:900;letter-spacing:.5px;color:var(--deep);font-size:30px}.tag{margin:5px 0;color:#956477}
+main{max-width:960px;margin:auto;padding:10px 16px 44px}.panel{background:#fff;border:1px solid #f7cbd9;border-radius:22px;padding:22px;box-shadow:0 12px 35px #b84d7415;margin-bottom:18px}
+h1,h2{margin:0 0 12px}h1{font-size:25px}h2{font-size:19px}.muted{color:#936d7d;font-size:14px;line-height:1.55}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:6px;margin:12px 0}label{font-weight:650;font-size:14px}input,textarea,select{width:100%;padding:12px 13px;border:1px solid #efc3d2;border-radius:12px;font:inherit;color:var(--ink);background:#fffafb}textarea{min-height:115px;resize:vertical}
+button{border:0;border-radius:13px;padding:12px 18px;font:inherit;font-weight:750;cursor:pointer;background:var(--pink);color:white}button.secondary{background:#fff0f5;color:var(--deep);border:1px solid #f3bfd0}button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.hidden{display:none!important}
+.preview{background:linear-gradient(150deg,#fff0f6,#ffe0ec);border-radius:20px;padding:25px;text-align:center;border:1px solid #f6c1d3}.heart{font-size:34px}.love-title{font-family:Georgia,serif;font-size:28px;color:#a83263;margin:8px}.message{white-space:pre-wrap;line-height:1.7;margin:16px auto;max-width:600px}.date{font-size:13px;color:#956477}
+#qr{display:flex;justify-content:center;padding:12px;min-height:20px}#qr img,#qr canvas{max-width:100%;height:auto!important}
+.notice{background:#fff8e8;border:1px solid #f2d79b;padding:12px 14px;border-radius:12px;color:#705324;font-size:13px;line-height:1.5}
+footer{text-align:center;color:#9c7182;font-size:12px;padding:12px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.panel{padding:17px}.brand{font-size:27px}}
+</style>
+</head>
+<body>
+<header><div class="brand">♡ Love QR</div><div class="tag">Món quà nhỏ, gửi trọn yêu thương</div></header>
+<main>
+<section id="creator" class="panel">
+<h1>Tạo QR tình yêu của riêng bạn 💗</h1>
+<p class="muted">Điền thông tin bên dưới. Love QR sẽ tạo một trang lời nhắn riêng và mã QR để bạn chia sẻ.</p>
+<div class="grid">
+<div class="field"><label for="from">Tên người gửi</label><input id="from" maxlength="35" placeholder="Ví dụ: Minh"></div>
+<div class="field"><label for="to">Tên người nhận</label><input id="to" maxlength="35" placeholder="Ví dụ: Lan"></div>
+</div>
+<div class="grid">
+<div class="field"><label for="date">Ngày đặc biệt (không bắt buộc)</label><input id="date" type="date"></div>
+<div class="field"><label for="style">Phong cách</label><select id="style"><option value="pink">Hồng pastel</option><option value="rose">Hồng đậm</option><option value="soft">Trắng hồng nhẹ</option></select></div>
+</div>
+<div class="field"><label for="message">Lời nhắn</label><textarea id="message" maxlength="700" placeholder="Viết điều bạn muốn gửi đến người ấy..."></textarea></div>
+<div class="actions"><button id="make">Tạo trang và mã QR</button><button class="secondary" id="reset" type="button">Xóa nội dung</button></div>
+<p class="muted">Mẹo: đừng nhập thông tin riêng tư nhạy cảm. Bạn có thể dùng biệt danh thay cho tên thật.</p>
+</section>
+
+<section id="result" class="panel hidden">
+<h2>Trang tình yêu của bạn</h2>
+<div id="lovePage" class="preview">
+<div class="heart">♡</div><div id="loveTitle" class="love-title"></div>
+<div id="loveMessage" class="message"></div><div id="loveDate" class="date"></div>
+</div>
+<h2 style="margin-top:22px">Mã QR để quét</h2>
+<div id="qr"></div>
+<p id="linkText" class="muted" style="overflow-wrap:anywhere;text-align:center"></p>
+<div class="actions">
+<button id="copy">Sao chép đường link</button>
+<button class="secondary" id="download">Tải ảnh QR</button>
+<button class="secondary" id="edit">Chỉnh sửa</button>
+</div>
+<div class="notice" style="margin-top:16px"><b>Lưu ý quan trọng:</b> QR chỉ mở được trên điện thoại khác sau khi em đăng website này lên Internet (ví dụ GitHub Pages). Bản mẫu này tạo link từ nội dung trong QR, chưa lưu đơn hàng vào cơ sở dữ liệu và chưa có thanh toán tự động.</div>
+</section>
+
+<section id="shared" class="panel hidden">
+<div id="sharedPage" class="preview">
+<div class="heart">♡</div><div id="sharedTitle" class="love-title"></div>
+<div id="sharedMessage" class="message"></div><div id="sharedDate" class="date"></div>
+</div>
+<p class="muted" style="text-align:center;margin-top:15px">Được gửi bằng Love QR ♡</p>
+</section>
+</main>
+<footer>Love QR · Hãy lan tỏa những điều tử tế và yêu thương</footer>
+<script>
+const $=id=>document.getElementById(id);
+function encode(obj){const bytes=new TextEncoder().encode(JSON.stringify(obj));let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function decode(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const bin=atob(s);const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));return JSON.parse(new TextDecoder().decode(bytes))}
+function paint(data,prefix){
+const title=data.from&&data.to?`${data.from} gửi ${data.to} ♡`:data.to?`Gửi ${data.to} ♡`:'Một lời nhắn dành cho bạn ♡';
+$(prefix+'Title').textContent=title;
+$(prefix+'Message').textContent=data.message||'Có những điều thật đẹp chỉ cần được nói ra.';
+$(prefix+'Date').textContent=data.date?'Ngày đặc biệt: '+new Date(data.date+'T00:00:00').toLocaleDateString('vi-VN'):'Một món quà nhỏ từ Love QR';
+}
+function theme(style){const page=$('lovePage');const colors={pink:['#fff0f6','#ffe0ec','#a83263'],rose:['#ffe7ef','#ffc9dc','#92264f'],soft:['#fff8fb','#fceaf1','#9e5470']};const c=colors[style]||colors.pink;page.style.background=`linear-gradient(150deg,${c[0]},${c[1]})`;page.style.color=c[2];}
+function showShared(){const raw=location.hash.match(/love=([^&]+)/);if(!raw)return false;try{const d=decode(raw[1]);$('creator').classList.add('hidden');$('result').classList.add('hidden');$('shared').classList.remove('hidden');paint(d,'shared');return true}catch(e){return false}}
+let currentUrl='';
+$('make').onclick=()=>{
+ const data={from:$('from').value.trim(),to:$('to').value.trim(),date:$('date').value,message:$('message').value.trim(),style:$('style').value};
+ if(!data.to||!data.message){alert('Em hãy nhập tên người nhận và lời nhắn nhé.');return}
+ if(!window.QRCode){alert('Không tải được thư viện QR. Hãy kiểm tra Internet rồi tải lại trang.');return}
+ const base=location.href.split('#')[0];currentUrl=base+'#love='+encode(data);
+ $('creator').classList.add('hidden');$('result').classList.remove('hidden');paint(data,'love');theme(data.style);
+ $('qr').innerHTML='';new QRCode($('qr'),{text:currentUrl,width:220,height:220,colorDark:'#54263a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+ $('linkText').textContent=currentUrl;
+};
+$('copy').onclick=async()=>{try{await navigator.clipboard.writeText(currentUrl);alert('Đã sao chép đường link!')}catch(e){prompt('Hãy sao chép đường link này:',currentUrl)}};
+$('download').onclick=()=>{const el=$('qr').querySelector('canvas')||$('qr').querySelector('img');if(!el){alert('Chưa có mã QR.');return}const a=document.createElement('a');a.download='love-qr.png';a.href=el.tagName==='CANVAS'?el.toDataURL('image/png'):el.src;a.click()};
+$('edit').onclick=()=>{$('result').classList.add('hidden');$('creator').classList.remove('hidden')};
+$('reset').onclick=()=>{['from','to','date','message'].forEach(id=>$(id).value='');$('style').value='pink'};
+if(!showShared()){$('creator').classList.remove('hidden')}
+</script>
+</body></html>
